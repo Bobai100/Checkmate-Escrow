@@ -252,6 +252,7 @@ impl EscrowContract {
 
     /// Update the protocol configuration.
     pub fn set_protocol_config(env: Env, config: ProtocolConfig) -> Result<(), Error> {
+        extend_instance_ttl(&env);
         let admin: Address = env
             .storage()
             .instance()
@@ -267,6 +268,7 @@ impl EscrowContract {
 
     /// Get the current protocol configuration.
     pub fn get_protocol_config(env: Env) -> Result<ProtocolConfig, Error> {
+        extend_instance_ttl(&env);
         Ok(Self::get_config(&env))
     }
 
@@ -336,6 +338,7 @@ impl EscrowContract {
 
     /// Add a token to the allowlist — admin only.
     pub fn add_allowed_token(env: Env, token: Address) -> Result<(), Error> {
+        extend_instance_ttl(&env);
         let admin: Address = env
             .storage()
             .instance()
@@ -382,6 +385,7 @@ impl EscrowContract {
 
     /// Remove a token from the allowlist — admin only.
     pub fn remove_allowed_token(env: Env, token: Address) -> Result<(), Error> {
+        extend_instance_ttl(&env);
         let admin: Address = env
             .storage()
             .instance()
@@ -1472,6 +1476,7 @@ impl EscrowContract {
         match_id: u64,
         winner: Winner,
     ) -> Result<(), Error> {
+        extend_instance_ttl(&env);
         if env
             .storage()
             .instance()
@@ -1641,6 +1646,7 @@ impl EscrowContract {
         results: Vec<(u64, Winner)>,
         caller: Address,
     ) -> Result<Vec<Option<Error>>, Error> {
+        extend_instance_ttl(&env);
         if env
             .storage()
             .instance()
@@ -2362,6 +2368,7 @@ impl EscrowContract {
 
     /// Set the match expiration timeout, in seconds. Admin only.
     pub fn set_match_timeout(env: Env, seconds: u64) -> Result<(), Error> {
+        extend_instance_ttl(&env);
         let admin: Address = env
             .storage()
             .instance()
@@ -2387,6 +2394,7 @@ impl EscrowContract {
     /// Set the maximum stake accepted by `create_match` and friends. Admin only.
     /// `None` removes the cap (unlimited stakes).
     pub fn set_maximum_stake(env: Env, amount: Option<i128>) -> Result<(), Error> {
+        extend_instance_ttl(&env);
         let admin: Address = env
             .storage()
             .instance()
@@ -2431,6 +2439,7 @@ impl EscrowContract {
 
     /// Accept pending admin proposal. Pending admin only. Finalizes the transfer.
     pub fn accept_admin(env: Env) -> Result<(), Error> {
+        extend_instance_ttl(&env);
         let pending_admin: Address = env
             .storage()
             .instance()
@@ -2599,6 +2608,7 @@ impl EscrowContract {
     /// Anyone may call this once `result_deadline` has passed and no dispute
     /// was raised.
     pub fn finalize_match(env: Env, match_id: u64) -> Result<(), Error> {
+        extend_instance_ttl(&env);
         let mut m: Match = env
             .storage()
             .persistent()
@@ -2675,6 +2685,7 @@ impl EscrowContract {
         disputer: Address,
         evidence_hash: String,
     ) -> Result<u64, Error> {
+        extend_instance_ttl(&env);
         disputer.require_auth();
 
         let mut m: Match = env
@@ -2831,6 +2842,7 @@ impl EscrowContract {
         voter: Address,
         vote: bool,
     ) -> Result<(), Error> {
+        extend_instance_ttl(&env);
         voter.require_auth();
 
         let mut dispute: Dispute = env
@@ -2969,6 +2981,7 @@ impl EscrowContract {
     /// - If quorum met and no_votes >= yes_votes: upheld (original result stands).
     ///   Dispute bond is forfeited to treasury.
     pub fn resolve_dispute_by_vote(env: Env, dispute_id: u64) -> Result<(), Error> {
+        extend_instance_ttl(&env);
         let mut dispute: Dispute = env
             .storage()
             .persistent()
@@ -3117,6 +3130,7 @@ impl EscrowContract {
     /// Set the dispute period in ledgers. Admin only.
     /// Set to 0 to disable the dispute period (immediate payout).
     pub fn set_dispute_period(env: Env, period: u32) -> Result<(), Error> {
+        extend_instance_ttl(&env);
         let admin: Address = env
             .storage()
             .instance()
